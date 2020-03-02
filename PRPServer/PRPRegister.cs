@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PRPServer
 {
-    class NameRegisteredException : Exception
+    public class NameRegisteredException : Exception
     {
 
     }
@@ -17,13 +17,13 @@ namespace PRPServer
         public IPEndPoint EndPoint;
     }
 
-    class PRPRegister
+    static class PRPRegister
     {
-        private List<RegisterInfo> registers;
+        private static List<RegisterInfo> registers = new List<RegisterInfo>();
 
-        void Register(string name, IPEndPoint endPoint)
+        public static void Register(string name, IPEndPoint endPoint)
         {
-            if ((from question in registers where question.RegisterName == name select question).Count() != 0)
+            if ((from question in registers where question.RegisterName == name select question).Any())
             {
                 throw new NameRegisteredException();
             }
@@ -33,7 +33,7 @@ namespace PRPServer
             registers.Add(info);
         }
 
-        void Unregister(string name)
+        public static void Unregister(string name)
         {
             registers.RemoveAll((RegisterInfo info) =>
             {
@@ -41,7 +41,7 @@ namespace PRPServer
             });
         }
 
-        IPEndPoint GetService(string name)
+        public static IPEndPoint GetService(string name)
         {
             return registers.Find((RegisterInfo inf) =>
             {
